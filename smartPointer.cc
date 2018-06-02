@@ -5,14 +5,21 @@
  * */
 sp::sp(Person *person):p(person)
 {
-
+	cout << "sp::sp(Person *person):p(person)" << endl;
+}
+sp::sp(const sp& op)
+{
+	cout << "sp::sp(const sp& op)" << endl;
+	this->p = op.p;
 }
 sp::~sp()
 {
+	cout << "sp::~sp()" << endl;
 	if (p)
 		delete p;
 }
 Person * sp::operator->()
 {
+	cout << "Person * sp::operator->()" << endl;
 	return this->p;
 }

@@ -22,15 +22,28 @@ void testSmartPointer()
 	sp pa = new Person("man", "liguan");
 	pa->myInfo();	
 }
-
+void testSmartPointer1(const sp& p)
+{
+	sp ptmp = p;           
+	/*
+	 * 一块内存一定是要可以多个指针同时指向的，所以什么时候释放呢？如果随着指针变量生命周期
+	 * 的结束而释放内寸显然是不合适的,因为别的指针可能还会用，那怎么办，如果new出来的对象（一块内存）
+	 * 里边有引用计数，即知道当前有没有多少指针指向它就好了。
+	 * 那样就可以在指针变量的生命周期结束的时候并且当前没有其他指针指向那片内存的时候释放就好了。
+	 * 
+	 */
+	ptmp->myInfo();	
+}
 int main(int argc, const char *argv[])
 {
-	int count = 1;
-	Person a = Person("man", "zhangw");
-	printHumanBaseInfo(a);
+	int count = 2;
+	//Person a = Person("man", "zhangw");
+	//printHumanBaseInfo(a);
+	sp sp_tmp = new Person("mv", "youyou");
 	while (count--) {
 		//test_pointer();
-		testSmartPointer();
+		//testSmartPointer();
+		testSmartPointer1(sp_tmp);
 	}
 	return 0;
 }

@@ -10,5 +10,6 @@ protected:
 public:
 	Person * operator->();
 	sp(Person *);
+	sp(const sp&);
 	~sp();
 };
