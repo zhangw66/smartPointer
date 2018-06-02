@@ -9,6 +9,7 @@ private:
 protected:
 public:
 	Person * operator->();
+	Person&  operator*();
 	sp(Person *);
 	sp(const sp&);
 	~sp();

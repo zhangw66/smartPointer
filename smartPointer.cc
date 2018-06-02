@@ -6,17 +6,27 @@
 sp::sp(Person *person):p(person)
 {
 	cout << "sp::sp(Person *person):p(person)" << endl;
+	p->incRefCount();
 }
 sp::sp(const sp& op)
 {
 	cout << "sp::sp(const sp& op)" << endl;
 	this->p = op.p;
+	p->incRefCount();
 }
 sp::~sp()
 {
 	cout << "sp::~sp()" << endl;
-	if (p)
-		delete p;
+	p->decRefCount();
+	if (!(p->getRefCount())) {
+		cout << "recount is 0,release memory" << endl;
+		if (p)
+			delete p;
+	}
+}
+Person& sp::operator*()
+{
+	return (*p);
 }
 Person * sp::operator->()
 {

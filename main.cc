@@ -2,6 +2,7 @@
 #include "person.h"
 #include "smartPointer.h"
 using namespace std;
+int  printPersonObjRefCount(sp&);
 void printHumanBaseInfo(Person& p)
 {
 	cout << "getName:" << p.getName() << endl;
@@ -25,6 +26,7 @@ void testSmartPointer()
 void testSmartPointer1(const sp& p)
 {
 	sp ptmp = p;           
+	printPersonObjRefCount(ptmp);
 	/*
 	 * 一块内存一定是要可以多个指针同时指向的，所以什么时候释放呢？如果随着指针变量生命周期
 	 * 的结束而释放内寸显然是不合适的,因为别的指针可能还会用，那怎么办，如果new出来的对象（一块内存）
@@ -32,7 +34,15 @@ void testSmartPointer1(const sp& p)
 	 * 那样就可以在指针变量的生命周期结束的时候并且当前没有其他指针指向那片内存的时候释放就好了。
 	 * 
 	 */
-	ptmp->myInfo();	
+	ptmp->myInfo();
+	(*ptmp).myInfo();
+}
+int  printPersonObjRefCount(sp& p)
+{
+	int rc;
+	rc = (*p).getRefCount();
+	cout << "cur Person object's ref count:" << rc <<endl;
+	return rc;
 }
 int main(int argc, const char *argv[])
 {
@@ -40,6 +50,7 @@ int main(int argc, const char *argv[])
 	//Person a = Person("man", "zhangw");
 	//printHumanBaseInfo(a);
 	sp sp_tmp = new Person("mv", "youyou");
+	printPersonObjRefCount(sp_tmp);
 	while (count--) {
 		//test_pointer();
 		//testSmartPointer();
