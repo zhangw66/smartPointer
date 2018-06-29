@@ -37,7 +37,7 @@ void testSmartPointer1(const sp& p)
 	ptmp->myInfo();
 	(*ptmp).myInfo();
 }
-int  printPersonObjRefCount(sp& p)
+int  printPersonObjRefCount(/*const*/ sp& p)
 {
 	int rc;
 	rc = (*p).getRefCount();
@@ -55,6 +55,7 @@ int main(int argc, const char *argv[])
 		//test_pointer();
 		//testSmartPointer();
 		testSmartPointer1(sp_tmp);
+		printPersonObjRefCount(sp_tmp);
 	}
 	return 0;
 }
