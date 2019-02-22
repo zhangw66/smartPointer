@@ -1,4 +1,4 @@
-main: main.o Person.o smartPointer.o
+main: main.o Person.o 
 	g++ $^ -o $@ -std=c++11 
 
 %.o:%.cc

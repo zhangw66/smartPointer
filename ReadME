@@ -18,3 +18,7 @@ int *pa = null;
 pa = &a;
 *pa = 4;
 int *pb = pa;
+
+
+安卓中的强弱指针什么意思?
+android里边的sp是指strong pointer,wp是指weak pointer.

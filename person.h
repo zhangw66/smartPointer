@@ -1,7 +1,9 @@
 #pragma once
+#include "android_ref/StrongPointer.h"
 #include <iostream>
 #include <string>
 using namespace std;
+using namespace ::android::RSC;
 /*
  *有一些信息是需要从Person类中解耦出来，
  *否则每次定义都需要加上这些引用计数的功能
@@ -16,8 +18,8 @@ protected:
 
 public:
 	RefCount():refCount(0){cout << "RefCount constructor!!"<<endl;};
-	void incRefCount(){refCount++;};
-	void decRefCount()
+	void incStrong(sp<T> *p) { refCount++; };
+	void decStrong(sp<T> *p)
 	{
 		refCount--; 
 		if (!refCount) 

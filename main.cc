@@ -1,6 +1,11 @@
 #include <iostream>
 #include "person.h"
+#if 0
 #include "smartPointer.cc"
+#else
+#include "android_ref/StrongPointer.h"
+using namespace ::android::RSC;
+#endif
 using namespace std;
 template <typename T>int printPersonObjRefCount(sp<T> &);
 void printHumanBaseInfo(Person& p)
@@ -59,3 +64,4 @@ int main(int argc, const char *argv[])
 	cout << "main func end>>>>>>>>>" <<endl;
 	return 0;
 }
+
