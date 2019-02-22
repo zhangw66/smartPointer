@@ -3,14 +3,15 @@
 #include <string>
 #include "person.h"
 using namespace std;
+template <typename T>
 class sp {
 private:
-	Person *p;
+	T *p;
 protected:
 public:
-	Person * operator->();
-	Person&  operator*();
-	sp(Person *);
+	T * operator->();
+	T&  operator*();
+	sp(T *);
 	sp(const sp&);
 	~sp();
 };

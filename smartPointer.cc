@@ -3,18 +3,20 @@
  * level1:
  * 	    利用函数返回的时候会析构非new出来的对象这个特性.
  * */
-sp::sp(Person *person):p(person)
+template <typename T> sp<T>::sp(T *person) : p(person)
 {
 	cout << "sp::sp(Person *person):p(person)" << endl;
-	p->incRefCount();
+	if (p)
+		p->incRefCount();
 }
-sp::sp(const sp& op)
+template <typename T> sp<T>::sp(const sp &op)
 {
 	cout << "sp::sp(const sp& op)" << endl;
 	this->p = op.p;
-	p->incRefCount();
+	if (p) 
+		p->incRefCount();
 }
-sp::~sp()
+template <typename T> sp<T>::~sp()
 {
 	cout << "sp::~sp()" << endl;
 	p->decRefCount();
@@ -24,12 +26,14 @@ sp::~sp()
 			delete p;
 	}
 }
-Person& sp::operator*()
+template <typename T> T &sp<T>::operator*() 
 {
+	//cout << "T &sp<T>::operator*()" <<endl; 
 	return (*p);
 }
-Person * sp::operator->()
+
+template <typename T> T *sp<T>::operator->()
 {
-	cout << "Person * sp::operator->()" << endl;
+	//cout << "T *sp<T>::operator->()" << endl;
 	return this->p;
 }

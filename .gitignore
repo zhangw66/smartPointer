@@ -1,3 +1,4 @@
 *.o
 main
 cscope.out
+.vscode/

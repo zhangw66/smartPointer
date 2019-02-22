@@ -1,8 +1,9 @@
 #include <iostream>
 #include "person.h"
-#include "smartPointer.h"
+#include "smartPointer.cc"
 using namespace std;
-int  printPersonObjRefCount(sp&);
+#if 1
+template <typename T>int printPersonObjRefCount(sp<T> &);
 void printHumanBaseInfo(Person& p)
 {
 	cout << "getName:" << p.getName() << endl;
@@ -20,12 +21,12 @@ void test_pointer()
 }
 void testSmartPointer()
 {
-	sp pa = new Person("man", "liguan");
+	sp<Person> pa = new Person("man", "liguan");
 	pa->myInfo();	
 }
-void testSmartPointer1(const sp& p)
+void testSmartPointer1(const sp<Person> &p)
 {
-	sp ptmp = p;           
+	sp<Person> ptmp = p;
 	printPersonObjRefCount(ptmp);
 	/*
 	 * 一块内存一定是要可以多个指针同时指向的，所以什么时候释放呢？如果随着指针变量生命周期
@@ -37,25 +38,29 @@ void testSmartPointer1(const sp& p)
 	ptmp->myInfo();
 	(*ptmp).myInfo();
 }
-int  printPersonObjRefCount(/*const*/ sp& p)
+template <typename T> 
+int printPersonObjRefCount(/*const*/ sp<T> &p)
 {
 	int rc;
 	rc = (*p).getRefCount();
 	cout << "cur Person object's ref count:" << rc <<endl;
 	return rc;
 }
+#endif
 int main(int argc, const char *argv[])
 {
 	int count = 2;
 	//Person a = Person("man", "zhangw");
 	//printHumanBaseInfo(a);
-	sp sp_tmp = new Person("mv", "youyou");
+	sp<Person> sp_tmp = new Person("mv", "youyou1");
 	printPersonObjRefCount(sp_tmp);
 	while (count--) {
+		cout << "~~~~~~~~~~begin" <<endl;
 		//test_pointer();
 		//testSmartPointer();
 		testSmartPointer1(sp_tmp);
-		printPersonObjRefCount(sp_tmp);
+		printPersonObjRefCount<Person>(sp_tmp);
+		cout << "~~~~~~~~~~end" << endl;
 	}
 	return 0;
 }
