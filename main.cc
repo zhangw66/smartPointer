@@ -2,7 +2,6 @@
 #include "person.h"
 #include "smartPointer.cc"
 using namespace std;
-#if 1
 template <typename T>int printPersonObjRefCount(sp<T> &);
 void printHumanBaseInfo(Person& p)
 {
@@ -21,8 +20,15 @@ void test_pointer()
 }
 void testSmartPointer()
 {
-	sp<Person> pa = new Person("man", "liguan");
-	pa->myInfo();	
+	sp<Person> pa = new Person("man", "ligan");
+	pa->myInfo();
+	printPersonObjRefCount(pa);
+	sp<Person> pb = nullptr;
+	pb = pa;
+	printPersonObjRefCount(pa);
+	pa = new Person("woman", "lili");
+	pb = nullptr;
+	pa = pb;
 }
 void testSmartPointer1(const sp<Person> &p)
 {
@@ -46,21 +52,10 @@ int printPersonObjRefCount(/*const*/ sp<T> &p)
 	cout << "cur Person object's ref count:" << rc <<endl;
 	return rc;
 }
-#endif
 int main(int argc, const char *argv[])
 {
-	int count = 2;
-	//Person a = Person("man", "zhangw");
-	//printHumanBaseInfo(a);
-	sp<Person> sp_tmp = new Person("mv", "youyou1");
-	printPersonObjRefCount(sp_tmp);
-	while (count--) {
-		cout << "~~~~~~~~~~begin" <<endl;
-		//test_pointer();
-		//testSmartPointer();
-		testSmartPointer1(sp_tmp);
-		printPersonObjRefCount<Person>(sp_tmp);
-		cout << "~~~~~~~~~~end" << endl;
-	}
+	cout << "main func in<<<<<<<<<" << endl;
+	testSmartPointer();
+	cout << "main func end>>>>>>>>>" <<endl;
 	return 0;
 }

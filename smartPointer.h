@@ -9,8 +9,11 @@ private:
 	T *p;
 protected:
 public:
-	T * operator->();
+	T* operator->();
 	T&  operator*();
+	sp& operator=(const sp&);
+	sp& operator=(const T*);
+	sp();
 	sp(T *);
 	sp(const sp&);
 	~sp();
