@@ -56,7 +56,7 @@ void testSmartPointer1(const sp<Person> &p)
 class child;
 class parent :public RefBase{
 private:
-	sp<child> pchild;
+	wp<child> pchild;
 	sp<parent> pself;
 	~parent(){cout << "parent discon"<<endl;}
     public:
@@ -67,8 +67,8 @@ private:
 
 class child:public RefBase {
 private:
-	sp<parent> pparent;
-	sp<child> pself;
+	wp<parent> pparent;
+	wp<child> pself;
 	~child() { cout << "child discon" << endl; }
 
       public:
@@ -84,8 +84,8 @@ void sp_issue()
 	sp<parent> dali = new parent;
 	xiaoli->setParent(dali.get());
 	dali->setChild(xiaoli.get());
-	// xiaoli->setSelf(xiaoli.get());
-	// dali->setSelf(dali.get());
+	xiaoli->setSelf(xiaoli.get());
+	dali->setSelf(dali.get());
 	 
 }
 

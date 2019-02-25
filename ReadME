@@ -29,3 +29,49 @@ android里边的sp是指strong pointer,wp是指weak pointer.
 理解弱指针,只需要理解两个概念:
 1-使用弱指针之前必须先升级为强指针,这里使用这个概念值得商榷.
 2-只要对象的强引用计数为0,该对象即可释放,不管此时对象有没有弱引用.
+
+讨论下不同规则下对删除目标对象时机的规则.
+当sp不再指向一块内存时,会调用:
+template<typename T>
+sp<T>::~sp() {
+    if (m_ptr)	//m_ptr指向目标对象,该对象必须继承RefBase
+        m_ptr->decStrong(this);	//减小引用计数.
+}
+
+void RefBase::decStrong(const void* id) const
+{
+    weakref_impl* const refs = mRefs; //获得计数器
+    refs->removeStrongRef(id);
+    const int32_t c = android_atomic_dec(&refs->mStrong);	//减少强引用计数
+    if (c == 1) {
+        refs->mBase->onLastStrongRef(id);
+        if ((refs->mFlags&OBJECT_LIFETIME_MASK) == OBJECT_LIFETIME_STRONG) {
+            delete this;	//删除RefBase,同时会删除目标对象,因为目标对象继承RefBase,且RefBase析构函数是virtual
+        }
+    }
+    refs->decWeak(id);
+}
+至此sp类 目标对象 refbase类都已经清理.此时还有一个类需要清除,即weakref_type和weakref_impl
+weakref_impl是继承weakref_type的,delete weakref_impl应该就可以了,这部分代码在RefBase的析构函数中.
+RefBase::~RefBase()
+{
+    if (mRefs->mStrong == INITIAL_STRONG_VALUE) {
+        // we never acquired a strong (and/or weak) reference on this object.
+        delete mRefs;
+    } else {
+        // life-time of this object is extended to WEAK or FOREVER, in
+        // which case weakref_impl doesn't out-live the object and we
+        // can free it now.
+        if ((mRefs->mFlags & OBJECT_LIFETIME_MASK) != OBJECT_LIFETIME_STRONG) {
+            // It's possible that the weak count is not 0 if the object
+            // re-acquired a weak reference in its destructor
+            if (mRefs->mWeak == 0) {
+                delete mRefs;
+            }
+        }
+    }
+    // for debugging purposes, clear this.
+    const_cast<weakref_impl*&>(mRefs) = NULL;
+}
+
+至此.所有类型均被清理.
