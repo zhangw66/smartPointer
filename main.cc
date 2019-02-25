@@ -52,6 +52,43 @@ void testSmartPointer1(const sp<Person> &p)
 	ptmp->myInfo();
 	(*ptmp).myInfo();
 }
+#if 1
+class child;
+class parent :public RefBase{
+private:
+	sp<child> pchild;
+	sp<parent> pself;
+	~parent(){cout << "parent discon"<<endl;}
+    public:
+	parent():pchild(nullptr){cout << "parent construc"<<endl;}
+	void setChild(child* c) { pchild = c; }
+	void setSelf(parent *p) { pself = p; }
+};
+
+class child:public RefBase {
+private:
+	sp<parent> pparent;
+	sp<child> pself;
+	~child() { cout << "child discon" << endl; }
+
+      public:
+  	child() :pparent(nullptr) { cout << "child construc" << endl; };
+	void setParent(parent* p) { pparent = p; }
+	void setSelf(child *p) { pself = p; }
+};
+#endif
+
+void sp_issue()
+{
+	sp<child> xiaoli = new child;
+	sp<parent> dali = new parent;
+	xiaoli->setParent(dali.get());
+	dali->setChild(xiaoli.get());
+	// xiaoli->setSelf(xiaoli.get());
+	// dali->setSelf(dali.get());
+	 
+}
+
 template <typename T> 
 int printPersonObjRefCount(/*const*/ sp<T> &p)
 {
@@ -63,7 +100,8 @@ int printPersonObjRefCount(/*const*/ sp<T> &p)
 int main(int argc, const char *argv[])
 {
 	cout << "main func in<<<<<<<<<" << endl;
-	testSmartPointer();
+	//testSmartPointer();
+	sp_issue();
 	cout << "main func end>>>>>>>>>" <<endl;
 	return 0;
 }
