@@ -1,11 +1,14 @@
 #include <iostream>
 #include "person.h"
+#include <cutils/atomic-x86_64.h>
+
 #if 0
 #include "smartPointer.cc"
 #else
-#include "android_ref/StrongPointer.h"
-using namespace ::android::RSC;
+//#include <utils/StrongPointer.h>
+//using namespace ::android::RSC;
 #endif
+using namespace android;
 using namespace std;
 template <typename T>int printPersonObjRefCount(sp<T> &);
 void printHumanBaseInfo(Person& p)
@@ -53,7 +56,7 @@ template <typename T>
 int printPersonObjRefCount(/*const*/ sp<T> &p)
 {
 	int rc;
-	rc = (*p).getRefCount();
+	rc = (*p).getStrongCount();
 	cout << "cur Person object's ref count:" << rc <<endl;
 	return rc;
 }

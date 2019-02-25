@@ -1,14 +1,17 @@
 #pragma once
-#include "android_ref/StrongPointer.h"
+//#include "android_ref/StrongPointer.h"
 #include <iostream>
 #include <string>
+#include <utils/RefBase.h>
 using namespace std;
-using namespace ::android::RSC;
+//using namespace ::android::RSC;
+using namespace ::android;
 /*
  *有一些信息是需要从Person类中解耦出来，
  *否则每次定义都需要加上这些引用计数的功能
  *我们将这些信息抽离出来。
  * */
+#if 0
 template <typename T>
 class RefCount {
 private:
@@ -31,7 +34,8 @@ public:
 	};
 	int getRefCount()const{return refCount;} ;
 };
-class Person: public RefCount<Person> {
+#endif
+class Person: public LightRefBase<Person> {
 private:
 	string sex;
 	string name;
